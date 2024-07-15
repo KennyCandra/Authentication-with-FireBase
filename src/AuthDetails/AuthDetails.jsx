@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { auth } from "../firebase"
 import { onAuthStateChanged } from "firebase/auth"
-import useZustandStore from "../Zustand"
 
 
 function AuthDetails() {
@@ -13,6 +12,8 @@ function AuthDetails() {
             if (authUser) {
                 setUser(authUser)
                 console.log(authUser.email)
+                const container = document.getElementById('container')
+                container.classList.add('right-panel-active')
             } else {
                 setUser(null)
             }
@@ -25,7 +26,7 @@ function AuthDetails() {
     }
 
   return (
-    <h1>{user ? <>Signed In as {user.email} <button onClick={signOut}>Sign Out</button></> : <>Signed Out</>}</h1>
+    <h1 style={{marginTop : "100px"}}>{user ? <>Signed In as {user.email} <button onClick={signOut}>Sign Out</button></> : <>Signed Out</>}</h1>
   )
 }
 
