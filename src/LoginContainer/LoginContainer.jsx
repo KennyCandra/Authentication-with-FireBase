@@ -1,12 +1,30 @@
 import { FaFacebook, FaLinkedinIn } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import "./LoginContainer.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword , signInWithPopup } from "firebase/auth";
+import { provider } from "../firebase";
+
 
 function LoginContainer() {
   const [user, setUser] = useState({ email: "", password: "" });
+
+  const [value , setValue ] = useState('')
+  const handleGoogleClick = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        setValue(result.user.email)
+        localStorage.setItem('email' , result.user.email)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    setValue(localStorage.getItem('email'))
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,7 +33,6 @@ function LoginContainer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setUser({email: '', password: ''})
     signInWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
         console.log(userCredential);
@@ -36,7 +53,7 @@ function LoginContainer() {
           <a href="#" className="social">
             <FaLinkedinIn />
           </a>
-          <a href="#" className="social">
+          <a href="#" className="social" onClick={handleGoogleClick}>
             <SiGmail />
           </a>
         </div>
